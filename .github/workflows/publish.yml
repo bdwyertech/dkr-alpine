@@ -90,7 +90,16 @@ jobs:
             ${{ env.IMAGE_NAME }}:${{ matrix.tag }}
             ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-      - name: Run Trivy vulnerability scanner
+      - name: Run Trivy vulnerability scanner against base image
+        uses: aquasecurity/trivy-action@0.29.0
+        with:
+          image-ref: 'alpine:${{ matrix.tag }}'
+          format: 'table'
+          exit-code: '0'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH,MEDIUM'
+      - name: Run Trivy vulnerability scanner against resulting image
         uses: aquasecurity/trivy-action@0.29.0
         with:
           image-ref: 'ghcr.io/${{ env.IMAGE_NAME }}:${{ matrix.tag }}'
@@ -98,4 +107,4 @@ jobs:
           exit-code: '1'
           ignore-unfixed: true
           vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
+          severity: 'CRITICAL,HIGH,MEDIUM'
