@@ -9,6 +9,9 @@ on:
         default: ''
   push:
     branches: ['main']
+  schedule:
+    # Daily 12AM
+    - cron: '0 0 * * *'
 
 env:
   IMAGE_NAME: bdwyertech/alpine
@@ -86,3 +89,12 @@ jobs:
             ${{ env.IMAGE_NAME }}:${{ matrix.tag }}
             ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.29.0
+        with:
+          image-ref: 'ghcr.io/${{ env.IMAGE_NAME }}:${{ matrix.tag }}'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
