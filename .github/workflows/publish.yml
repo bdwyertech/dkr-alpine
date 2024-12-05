@@ -70,6 +70,7 @@ jobs:
           flavor: |
             latest=${{ matrix.tag == 'latest' }}
           tags: |
+            type=raw,value=${{ matrix.tag }}
             type=sha,enable=true,priority=100,prefix=${{ matrix.tag }}-${{ steps.params.outputs.date }}--,suffix=,format=short
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
