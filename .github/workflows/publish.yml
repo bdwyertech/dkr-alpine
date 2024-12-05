@@ -22,7 +22,7 @@ jobs:
       matrix:
         tag:
           - 'latest'
-          - '3.21'
+          # - '3.21'
           - '3.20'
           - '3.19'
           - '3.18'
@@ -85,7 +85,7 @@ jobs:
           file: Dockerfile
           push: true
           build-args: |
-            DOCKER_TAG=${{ matrix.tag }}
+            ALPINE_VERSION=${{ matrix.tag }}
           tags: |
             ${{ env.IMAGE_NAME }}:${{ matrix.tag }}
             ${{ steps.meta.outputs.tags }}
