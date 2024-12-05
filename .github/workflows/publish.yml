@@ -83,6 +83,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build and push Docker image
+        id: build
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -98,10 +99,10 @@ jobs:
 
       - name: Sign the images
         run: |
-          cosign sign ghcr.io/${{ env.IMAGE_NAME }}:${{ matrix.tag }}
-          cosign verify ghcr.io/${{ env.IMAGE_NAME }}:${{ matrix.tag }}
-          cosign sign docker.io/${{ env.IMAGE_NAME }}:${{ matrix.tag }}
-          cosign verify docker.io/${{ env.IMAGE_NAME }}:${{ matrix.tag }}
+          cosign sign --yes ghcr.io/${{ env.IMAGE_NAME }}:${{ steps.build.outputs.digest }}
+          cosign verify ghcr.io/${{ env.IMAGE_NAME }}:${{ steps.build.outputs.digest }}
+          cosign sign --yes docker.io/${{ env.IMAGE_NAME }}:${{ steps.build.outputs.digest }}
+          cosign verify docker.io/${{ env.IMAGE_NAME }}:${{ steps.build.outputs.digest }}
         env:
           COSIGN_EXPERIMENTAL: 1
 
