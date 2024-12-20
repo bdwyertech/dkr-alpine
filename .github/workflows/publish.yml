@@ -101,13 +101,14 @@ jobs:
 
       - name: Sign the images
         run: |
-          cosign sign -y --key env://COSIGN_PRIVATE_KEY ghcr.io/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
+          cosign sign -y --certificate env://COSIGN_CERT --key env://COSIGN_PRIVATE_KEY ghcr.io/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
           cosign verify ghcr.io/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
-          cosign sign -y --key env://COSIGN_PRIVATE_KEY docker.io/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
+          cosign sign -y --certificate env://COSIGN_CERT --key env://COSIGN_PRIVATE_KEY docker.io/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
           cosign verify docker.io/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
         env:
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+          COSIGN_CERT: ${{ secrets.COSIGN_PUBLIC_KEY }}
 
       - name: Run Trivy vulnerability scanner against base image
         uses: aquasecurity/trivy-action@0.29.0
