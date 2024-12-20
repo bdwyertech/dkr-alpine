@@ -101,9 +101,9 @@ jobs:
 
       - name: Sign the images
         run: |
-          cosign sign --key env://COSIGN_PRIVATE_KEY ghcr.io/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
+          cosign sign -y --key env://COSIGN_PRIVATE_KEY ghcr.io/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
           cosign verify ghcr.io/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
-          cosign sign --key env://COSIGN_PRIVATE_KEY docker.io/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
+          cosign sign -y --key env://COSIGN_PRIVATE_KEY docker.io/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
           cosign verify docker.io/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
         env:
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
