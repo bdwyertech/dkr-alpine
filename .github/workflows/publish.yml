@@ -111,7 +111,7 @@ jobs:
           COSIGN_CERT: ${{ secrets.COSIGN_PUBLIC_KEY }}
 
       - name: Run Trivy vulnerability scanner against base image
-        uses: aquasecurity/trivy-action@0.29.0
+        uses: aquasecurity/trivy-action@0.34.1
         with:
           image-ref: 'alpine:${{ matrix.tag }}'
           format: 'table'
@@ -121,7 +121,7 @@ jobs:
           severity: 'CRITICAL,HIGH,MEDIUM'
 
       - name: Run Trivy vulnerability scanner against resulting image
-        uses: aquasecurity/trivy-action@0.29.0
+        uses: aquasecurity/trivy-action@0.34.1
         with:
           image-ref: 'ghcr.io/${{ env.IMAGE_NAME }}:${{ matrix.tag }}'
           format: 'table'
